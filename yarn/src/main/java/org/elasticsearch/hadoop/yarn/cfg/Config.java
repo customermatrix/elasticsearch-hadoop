@@ -203,6 +203,19 @@ public class Config {
         return sysProp;
     }
 
+    public Map<String, String> esConf() {
+        Map<String, String> sysProp = new LinkedHashMap<String, String>();
+        Set<String> keys = cfg.stringPropertyNames();
+        String prefix = "es.conf.";
+        for (String key : keys) {
+            if (key.startsWith(prefix)) {
+                sysProp.put(key.substring(prefix.length()), cfg.getProperty(key));
+            }
+        }
+        return sysProp;
+    }
+
+
     public Properties asProperties() {
         return PropertiesUtils.merge(null, cfg);
     }
