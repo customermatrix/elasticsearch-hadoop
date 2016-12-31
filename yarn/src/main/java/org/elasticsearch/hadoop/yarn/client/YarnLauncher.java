@@ -102,7 +102,8 @@ public class YarnLauncher {
         Path p = new Path(clientCfg.jarHdfsPath());
         FileStatus fsStat;
         try {
-            fsStat = FileSystem.get(client.getConfiguration()).getFileStatus(p);
+            FileSystem fs = p.getFileSystem(client.getConfiguration());
+            fsStat = fs.getFileStatus(p);
         } catch (IOException ex) {
             throw new IllegalArgumentException(
                     String.format("Cannot find jar [%s]; make sure the artifacts have been properly provisioned and the correct permissions are in place.", clientCfg.jarHdfsPath()), ex);

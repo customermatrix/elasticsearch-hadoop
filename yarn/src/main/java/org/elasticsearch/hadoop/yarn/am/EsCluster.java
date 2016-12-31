@@ -256,7 +256,8 @@ class EsCluster implements AutoCloseable {
         Path p = new Path(esZipHdfsPath);
         FileStatus fsStat;
         try {
-            fsStat = FileSystem.get(cfg).getFileStatus(p);
+            FileSystem fs = p.getFileSystem(cfg);
+            fsStat = fs.getFileStatus(p);
         } catch (IOException ex) {
             throw new IllegalArgumentException(
                     String.format("Cannot find Elasticsearch zip at [%s]; make sure the artifacts have been properly provisioned and the correct permissions are in place.", esZipHdfsPath), ex);

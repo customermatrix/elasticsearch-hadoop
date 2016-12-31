@@ -133,7 +133,9 @@ public class YarnBootstrap extends Configured implements Tool {
     private void install(File src, String dst, Configuration cfg) {
         Path target = new Path(dst);
         try {
-            FileSystem fs = FileSystem.get(URI.create("hdfs:///"), cfg);
+            FileSystem fs = target.toUri().getScheme() != null ?
+                target.getFileSystem(cfg) :
+                FileSystem.get(URI.create("hdfs:///"), cfg);
             if (fs.exists(target)) {
                 fs.delete(target, true);
             }
