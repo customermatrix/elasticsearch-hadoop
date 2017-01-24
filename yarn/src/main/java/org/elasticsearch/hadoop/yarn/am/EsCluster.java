@@ -279,8 +279,12 @@ class EsCluster implements AutoCloseable {
         cmds.add(YarnCompat.$$(ApplicationConstants.Environment.SHELL));
         // make sure to include the ES.ZIP archive name used in the local resource setup above (since it's the folder where it got unpacked)
         cmds.add(conf.esZipName() + "/" + conf.esScript());
+
+        int majorVersion = Integer.valueOf(conf.downloadEsVersion().replaceFirst("\\..*", ""));
+        String optionPrefix = majorVersion >= 5 ? "-E" : "--";
+        String optionSeparator = majorVersion >= 5 ? "=" : " ";
         for(Map.Entry<String, String> e: conf.esConf().entrySet()){
-            cmds.add("-E" + e.getKey() + "=" + e.getValue());
+            cmds.add(optionPrefix + e.getKey() + optionSeparator + e.getValue());
         }
         cmds.add("1>" + ApplicationConstants.LOG_DIR_EXPANSION_VAR + "/" + ApplicationConstants.STDOUT);
         cmds.add("2>" + ApplicationConstants.LOG_DIR_EXPANSION_VAR + "/" + ApplicationConstants.STDERR);
